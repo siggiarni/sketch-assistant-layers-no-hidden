@@ -1,21 +1,27 @@
 import { AssistantPackage, RuleDefinition } from '@sketch-hq/sketch-assistant-types'
 
-const helloWorld: RuleDefinition = {
+const hiddenLayer: RuleDefinition = {
   rule: async (context) => {
-    context.utils.report('Hello world')
+    const { utils } = context
+
+    for (const layer of utils.objects.anyLayer) {
+      if (layer.isVisible === false) {
+        utils.report('This layer is hidden', layer)
+      }
+    }
   },
-  name: 'sketch-assistant-template/hello-world',
-  title: 'Hello World',
-  description: 'Reports a hello world message',
+  name: 'hidden-layers',
+  title: 'Hidden layers',
+  description: 'List hidden layers in a project',
 }
 
 const assistant: AssistantPackage = async () => {
   return {
-    name: 'sketch-assistant-template',
-    rules: [helloWorld],
+    name: 'hidden-layers',
+    rules: [hiddenLayer],
     config: {
       rules: {
-        'sketch-assistant-template/hello-world': { active: true },
+        'hidden-layers': { active: true },
       },
     },
   }
